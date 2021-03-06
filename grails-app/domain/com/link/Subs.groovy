@@ -1,12 +1,14 @@
 package com.link
 
 class Subs {
-    Date Created
-    static belongsTo =[user: User, topic: Topic]
+    Date dateCreated
     enum Seriousness{
-        PUBLIC,PRIVATE
+        CASUAL,
+        SERIOUS,
+        VSERIOUS
     }
     Seriousness serious
+    static belongsTo =[user: User, topic: Topic]
     static constraints ={
         serious nullable : true
     }

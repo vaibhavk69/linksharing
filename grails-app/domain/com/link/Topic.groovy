@@ -1,12 +1,11 @@
 package com.link
 
-import com.link.User
 
 class Topic {
 
     String name
-    Date Created
-    Date Updated
+    Date created
+    Date updated
     static belongsTo =[creator: User]
     enum Visibility{
     PUBLIC,PRIVATE
