@@ -16,6 +16,6 @@ class User {
         firstName nullable: true, maxSize: 255
         lastName nullable: true, maxSize: 255
         email email: true, blank: false
-        password size: 8..16, blank: false, nullable:true
+        password size: 8..16, blank: false, nullable:false
     }
 }
