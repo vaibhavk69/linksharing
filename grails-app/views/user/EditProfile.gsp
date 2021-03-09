@@ -103,6 +103,7 @@
 %{--                            <button class="btn btn-success btn-block mt-3" name="login" class="pt-3">LogIn</button>--}%
 
 %{--                        </g:form>--}%
+                        <!---->
                     </div>
 
                     <p>OR</p>
