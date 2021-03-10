@@ -22,14 +22,15 @@ class UserController {
         print(params)
         User user = userService.login(params.email, params.password)
         print(user)
+        session.user = user
         if (user) {
-            session.user = user
-            render(view: "Dashboard")
 
-        } else {
-            render(view: 'forUser')
+            redirect (action: "dashboard")
 
         }
+        render(view: 'forUser')
+
+
         //        if( userService.login(params.email,params.password)){
 //            print("-----------------------------------logged in------------------------------")
 //            render "logged in"
@@ -38,12 +39,16 @@ class UserController {
 //            render "logged out"
 //        }
     }
+    def dashboard(){
+        render(view: 'Dashboard')
+    }
     def logout(){
 
         session.invalidate()
         //userService.logout()
-        render(view: 'forUser')
+        redirect(view: 'forUser')
         }
+
     def profile(){
         redirect(view: 'EditProfile')
     }

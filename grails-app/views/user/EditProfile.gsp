@@ -97,12 +97,14 @@
                         <h5 class="text-center py-2 font-weight-bold mb-0 mt-2">Login</h5>
                     </div>
                     <div class="card-body">
-%{--                        <g:form controller="User" action="login">--}%
-%{--                            <g:textField name="email" placeholder="Email address" class="form-control mb-2"/>--}%
-%{--                            <g:passwordField name="password" placeholder="Password" class="form-control mb-2"/>--}%
-%{--                            <button class="btn btn-success btn-block mt-3" name="login" class="pt-3">LogIn</button>--}%
+                        <g:form controller="User" action="input">
+                            <g:textField name="lastName" placeholder="Lastname" value="${session.user.firstName}" class="form-control mb-2"/>
+                            <g:textField name="firstName" placeholder="Firstname" class="form-control mb-2"/>
+                            <g:textField name="email" placeholder="Email address" class="form-control mb-2"/>
+                            <g:passwordField name="password" placeholder="Password" class="form-control mb-2"/>
+                            <g:submitButton class="btn btn-success btn-block mt-3 pt-3" name="input" >Submit</g:submitButton>
+                        </g:form>
 
-%{--                        </g:form>--}%
                         <!---->
                     </div>
 
@@ -112,13 +114,12 @@
                         <h5 class="text-center py-2 font-weight-bold mb-0 mt-2">Register</h5>
                     </div>
                     <div class="card-body">
-%{--                        <g:form controller="User" action="input">--}%
-%{--                            <g:textField name="lastName" placeholder="Lastname" class="form-control mb-2"/>--}%
-%{--                            <g:textField name="firstName" placeholder="Firstname" class="form-control mb-2"/>--}%
-%{--                            <g:textField name="email" placeholder="Email address" class="form-control mb-2"/>--}%
-%{--                            <g:passwordField name="password" placeholder="Password" class="form-control mb-2"/>--}%
-%{--                            <g:submitButton class="btn btn-success btn-block mt-3 pt-3" name="input" >Submit</g:submitButton>--}%
-%{--                        </g:form>--}%
+                        <g:form controller="User" action="login">
+                            <g:textField name="email" placeholder="Email address" class="form-control mb-2"/>
+                            <g:passwordField name="password" placeholder="Password" class="form-control mb-2"/>
+                            <button class="btn btn-success btn-block mt-3" name="login" class="pt-3">LogIn</button>
+                        </g:form>
+
                     </div>
                 </div>
             </div>

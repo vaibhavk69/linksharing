@@ -22,7 +22,10 @@
 </head>
 
 <body>
-
+<g:if test="${session.user==NULL}">
+    <p>Not Found</p>
+</g:if>
+<g:else>
 <nav class="navbar navbaar-inverse navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
         <div class="navbar-nav" style=" width: 100%;">
@@ -129,5 +132,6 @@
 </div>
 <!--top share and post-->
 </div>
+</g:else>
 </body>
 </html>
