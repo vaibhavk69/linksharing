@@ -1,9 +1,9 @@
 package test11
 
-import grails.testing.web.controllers.ControllerUnitTest
+import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
-class UserCOControllerSpec extends Specification implements ControllerUnitTest<UserCOController> {
+class TopicServiceSpec extends Specification implements ServiceUnitTest<TopicService>{
 
     def setup() {
     }

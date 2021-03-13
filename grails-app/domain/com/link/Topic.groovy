@@ -2,19 +2,22 @@ package com.link
 
 
 class Topic {
-
-    String name
-    Date created
-    Date updated
-    static belongsTo =[creator: User]
-    enum Visibility{
-    PUBLIC,PRIVATE
-}
-    Visibility visibility
+//    Topic(def a){
+//        this.name=a.name
+//    }
+    User createdBy
+    String topicName
+    Date dateCreated
+    Date lastUpdated
+    static belongsTo =[createdBy: User]
+//    enum Visibility{
+//    PUBLIC,PRIVATE
+//}
+//    Visibility visibility
     static hasMany=[resource:Resource, sub:Subs]
     static constraints ={
-        name nullable : true
-        visibility nullable: true
+        topicName nullable : true
+        //visibility nullable: true
 
     }
 }

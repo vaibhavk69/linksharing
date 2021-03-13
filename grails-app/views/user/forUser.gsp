@@ -72,7 +72,7 @@
                             <h5 class="text-center py-2 font-weight-bold mb-0 mt-2">Login</h5>
                         </div>
                         <div class="card-body">
-                            <g:form controller="User" action="login">
+                            <g:form  action="login">
                                 <g:textField name="email" placeholder="Email address" class="form-control mb-2"/>
                                 <g:passwordField name="password" placeholder="Password" class="form-control mb-2"/>
                                 <button class="btn btn-success btn-block mt-3" name="login" class="pt-3">LogIn</button>
@@ -86,12 +86,13 @@
                             <h5 class="text-center py-2 font-weight-bold mb-0 mt-2">Register</h5>
                         </div>
                         <div class="card-body">
-                            <g:form controller="User" action="input">
+                            <g:form controller="User" action="register">
                                 <g:textField name="lastName" placeholder="Lastname" class="form-control mb-2"/>
                                 <g:textField name="firstName" placeholder="Firstname" class="form-control mb-2"/>
                                 <g:textField name="email" placeholder="Email address" class="form-control mb-2"/>
+                                <g:textField name="userName" placeholder="User-Name" class="form-control mb-2"/>
                                 <g:passwordField name="password" placeholder="Password" class="form-control mb-2"/>
-                                <g:submitButton class="btn btn-success btn-block mt-3 pt-3" name="input" >Submit</g:submitButton>
+                                <g:submitButton class="btn btn-success btn-block mt-3 pt-3" name="register" >Submit</g:submitButton>
                             </g:form>
                         </div>
                     </div>
