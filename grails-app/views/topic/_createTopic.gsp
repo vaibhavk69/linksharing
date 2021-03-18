@@ -9,7 +9,7 @@
     <g:form controller="topic" action="createTopic" method="POST">
         <input type="text" name="topicName" placeholder="enter...">
 
-%{--                                    <!--<g:select name="visibility" from="${com.link.Topic.Visibility.values()}"/>-->--}%
+        <g:select name="visibility" from="${com.link.Topic.Visibility.values()}"/>
     <g:actionSubmit value="create" class="btn btn-success btn-block mt-3 pt-3" name="createTopic" action="createTopic" controller="topic" />
 
 </g:form>

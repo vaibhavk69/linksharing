@@ -32,6 +32,18 @@ class UserService  {
             return null
         }
     }
+    def savePhoto(long id, def params){
+        println("inside savePhoto")
+        User user=User.findById(id)
+        println(user.id)
+        String fname="/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${user.userName}.jpeg";
+        ByteArrayInputStream bis = new ByteArrayInputStream(params.photo.getBytes());
+        BufferedImage bImage2 = ImageIO.read(bis);
+        ImageIO.write(bImage2, "jpeg", new File("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${user.userName}.jpeg"));
+
+        user.photo = fname
+        user.save(flush:true,failOnError:true)
+    }
 //        def logout(){
 //            session.invalidate()
 //        }

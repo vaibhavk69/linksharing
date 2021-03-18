@@ -11,6 +11,7 @@ class BootStrap {
         new User(firstName:"Mr",lastName:"Nishchay",email:"MN@helloworld.com",password:"123456789",userName:"NG").save(flush:true,failOnError:true)
         new User(firstName:"Sunny",lastName:"Arora",email:"SA@helloworld.com",password:"123456789",userName:"SA").save(flush:true,failOnError:true)
         println("data saved")
+
     }
     def destroy = {
     }

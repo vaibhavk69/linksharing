@@ -35,8 +35,9 @@
 
             <span style="float: right; margin-left: 530px">
                 <div class="navbar-form form-inline navbar-right">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-success my-2 my-sm-0" type="button" >Search</button>
+                    <g:form>
+                    <g:textField class="form-control mr-sm-2" id="search" type="text" placeholder="Search" name="searchBar"/>
+                    <g:submitButton name="submit" class="btn btn-success my-2 my-sm-0" type="button" >Search</g:submitButton></g:form>
                     <i class="far fa-comment fa-2x" style="margin-left: 5px ;color: #b3d7ff;"  data-toggle="modal" data-target="#myModal1"></i>
 
                                         <g:render template="/topic/createTopic"></g:render>
@@ -44,6 +45,7 @@
                     <i class="fas fa-link fa-2x" style="color: #b3d7ff;margin-left: 5px" data-toggle="modal" data-target="#myModal2"></i>
                                         <g:render template="/resource/addDoc"></g:render>
                     <i class="far fa-envelope fa-2x" style="color: #b3d7ff;margin-left: 5px" data-toggle="modal" data-target="#myModal3"></i>
+                                    <g:render template="/resource/addLink"></g:render>
                     <i class="far fa-sticky-note fa-2x" style="color: #b3d7ff;margin-left: 5px" data-toggle="modal" data-target="myModal4"></i>
                                             
                     <div style="float: right; ">
@@ -56,15 +58,11 @@
                                 <g:link controller="User" action="profile" class="dropdown-item">Profile</g:link>
                                 <g:link controller="User" action="logout" class="dropdown-item">Logout</g:link>
                             </div>
-
                     </div>
-
                 </div>
             </span>
-
         </div>
     </div>
-
 </nav>
 
 <div class="container col-sm-6" style="width: 500px; float: left">
@@ -75,7 +73,7 @@
 
             <div style="float: left">
 %{--                <img class="card-img-left" src="/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/file1.jpeg"  alt="Card image">--}%
-                <g:img class="card-img-left" dir="images" file="profilePic/file1.jpeg"  alt="Card image"/></div>
+                <g:img class="card-img-left" dir="images" file="${session.user.photo}"  alt="Card image"/></div>
             <div>${session.user.firstName} ${session.user.lastName}
                 <br>
                 <br>
@@ -96,34 +94,38 @@
     </div>
     <br>
     <br>
-    <div class="card" >
-        <div class="card-header">Subscription
-        <span style="float: right;"><a href="1.html">view all</a></span></div>
-        <div class="card-body"> content
+    <g:render template="/subscription/subscriptions" />
+    <br>
+    <br>
+    <g:render template="/topic/trendingTopics" />
+%{--    <div class="card" >--}%
+%{--        <div class="card-header">Subscription--}%
+%{--        <span style="float: right;"><a href="1.html">view all</a></span></div>--}%
+%{--        <div class="card-body"> content--}%
 %{--        <g:form controller="topic" action="entry">--}%
 %{--            <p>Name:</p>--}%
 %{--        <g:textField name="userName" placeholder="Name" class="form-control mb-2"/>--}%
 %{--            <g:select name="visibility" from="${visible}"/>--}%
 %{--        </g:form>--}%
-            </div>
-    </div>
+%{--            </div>--}%
+%{--    </div>--}%
 </div>
 
-<div class="container">
+<div class="container" id="inbox">
     <div class=" m-auto">
 %{--      class:  col-lg-6--}%
         <div class="card bg-white ">
 
 
 
-            <div class="card-header">Inbox<span style="float: right;width: fit-content"><a href="1.html">view all</a></span></div>
+            <div class="card-header" >Inbox<span style="float: right;width: fit-content"><a href="1.html">view all</a></span></div>
             <div class="card-body">
                 <div style="float: left"><img class="card-img-left" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8QDhEREA0KDRAQDxAODRAQEA8JFRAKFhIXIhQRExMkHSgsGRslGxMTITEhMSkrLjouFx8/ODMtNygtLjcBCgoKBQwNFQ8FFSsZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAIAAgAMBIgACEQEDEQH/xAAaAAEAAwEBAQAAAAAAAAAAAAAABAUGAwIH/8QAMBAAAgECAwYFAgcBAAAAAAAAAAECAxEEITEFQVFhcZESIqGxwXLwIzJCUoGC4WL/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A+4gAAAAAAAAi4nHU6eTd3wXmf88CDPbPCn3kBcAp4bZ40+0idhsdTqZKVnwflf8AHECUAAAAAAAAAAAAAFVtXHuL8EHZ/qlw5LmWVSXhi3wTfoZVybbb1bbfVgAAAAAFxsvHtvwTd3+iXHk+ZamSUmmmtU011RqqU/FFPik+6A9gAAAAAAAAADjilenP6JezMwjSY3ERpwvJN3ySW9szYAAAAAAZp8IrU4L/AIj7GYNJgsRGpC8U1bJp7mgJIAAAAAAAAAAqNvaU+su9ipNLjMMqkPC8t8XraRnsRQdOXhlZvJ5cGBzAAAAAC22DpU6x72ZW4eg6kvDGybu8+CNDg8MqcPCs3rJ6XkBIAAAAAAAAAAAp9u0s4z/q+u75Lg5V6SnFxej+00BlwHr0v7gAAFr1t6sC02FSzlPpFdd/wXJyoUlCKitF9ts6gAAAAAAAAADzKSSu2kuLyA9ArsRtWnHKN5vlku5V4jHVKmsrL9sfL3e8CPLV9X7gAAI6rqvcADWgzWGx1SnpLxL9svN2e4tMPtWnLKV4Pnmu4FiDzGSaumnzWZ6AAAAcK+JhBXlJLlq30RF2pjXTSjH80s762jx6lJJtu7bbe95gWVfa7eUI25yz7Ir6taU35pSl1+EeAAAAAAAAAAAAHujWlB+WUo9PlFjQ2w9Jxvzjl6FWANNh8TCorxkny0a6o7mTi2ndNpresi72XjXUTjL80c76Xjx6gV+15XrS5KK9CGSNoP8AGn9VvREcAAAAAAAAAAAAAAAAATNkStWjzUl6f4QyRs5/jQ+r4YH/2Q=="  alt="Card image"></div>
-                <div><a href="1.html">Grails</a>
+                <div   style="font-size: 30px;"><a href="1.html" id="results">Grails</a>
                     <br>
-                    <div><span style="float: left">@uday
+                    <div><span id="username" style="float: left">@uday
                     <br>
-                        content
+                        <span id="description">content</span>
 %{--                       <a href="1.html">subscription</a>--}%
                     </span>
 %{--                        <span style="float: left;padding-left: 10px;">subscription--}%
@@ -140,7 +142,7 @@
                     <div><i class="fab fa-twitter"></i>
                     <i class="fab fa-facebook"></i>
                         <i class="fab fa-google"></i>
-                    <span style="float: right"><a href="Dashboard.gsp">Download</a> </span></div>
+                    <span style="float: right"><a href="Dashboard.gsp" download="./home/vaibhavkaushik/Downloads/project.pdf">Download</a> </span></div>
                 </div>
             </div>
 
@@ -149,6 +151,40 @@
         </div>
     </div>
 </div>
+
+%{--    <div id="results" style="font-size: 30px;color: red"></div>--}%
+%{--    <script>--}%
+%{--        $(document).ready(function(){--}%
+%{--            $('#search').keyup(function (){--}%
+%{--                var text = $(this).val() ;--}%
+%{--                if(text != ''){--}%
+%{--                    myfunction1(text);--}%
+%{--                }--}%
+%{--                else{--}%
+%{--                    $('#results').html('');--}%
+%{--                }--}%
+%{--            });--}%
+%{--        });--}%
+%{--        function myfunction1(text){--}%
+%{--            $.ajax({--}%
+%{--                // type: 'post',--}%
+%{--                // method: 'post',--}%
+%{--                url: "http://localhost:8080/user/search",--}%
+%{--                data: {search: $('#search').val()},--}%
+%{--                dataType: "JSON",--}%
+%{--                success: function (result){--}%
+%{--                    // $('#searchOutput').text("result found");--}%
+%{--                    //$('#results').text(result.topicName);--}%
+%{--                    //alert(result.userName);--}%
+%{--                    //$('#inbox').hide('slow');--}%
+%{--                    //$('#inbox').show('fast')--}%
+%{--                    $('#username').text(result.topicName);--}%
+%{--                    //$('#description').text(result.topic)--}%
+%{--                    // $('#inbox').hide('slow');--}%
+%{--                }--}%
+%{--            });--}%
+%{--        };--}%
+%{--    </script>--}%
 <!--top share and post-->
 </div>
 </g:else>

@@ -1,12 +1,16 @@
 package com.link
 
 class User {
-    User(def a){
-        this.firstName = a.firstName
-        this.lastName= a.lastName
-        this.email=a.email
-        this.userName=a.userName
-        this.password=a.password
+//    User(def a){
+//        this.firstName = a.firstName
+//        this.lastName= a.lastName
+//        this.email=a.email
+//        this.userName=a.userName
+//        this.password=a.password
+//        println("inside constructor")
+//    }
+    static mapping = {
+        table 'UserInfo'
     }
     String firstName
     String lastName
@@ -26,5 +30,13 @@ class User {
         password size: 8..16, blank: false, nullable:false
         userName nullable:false
         photo nullable: true
+    }
+    def getSubbedTopic(){
+        List list= Subs.createCriteria().list{
+            projections{
+                property('topic')
+            }
+            eq{user.id}
+        }
     }
 }
