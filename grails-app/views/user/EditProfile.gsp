@@ -133,11 +133,11 @@
                         <h5 class="text-center py-2 font-weight-bold mb-0 mt-2">Update password</h5>
                     </div>
                     <div class="card-body">
-%{--                        <g:form controller="User" action="update">--}%
-%{--                            <g:textField name="password" placeholder="Password" class="form-control mb-2"/>--}%
-%{--                            <g:passwordField name="confPassword" placeholder="Confirm Password" class="form-control mb-2"/>--}%
-%{--                            <button class="btn btn-success btn-block mt-3" name="update" class="pt-3">Update</button>--}%
-%{--                        </g:form>--}%
+                        <g:form controller="User" action="updatePasswords">
+                            <g:textField name="password" placeholder="Password" class="form-control mb-2"/>
+                            <g:passwordField name="confPassword" placeholder="Confirm Password" class="form-control mb-2"/>
+                            <button class="btn btn-success btn-block mt-3" name="update" class="pt-3">Update</button>
+                        </g:form>
 
                     </div>
                 </div>

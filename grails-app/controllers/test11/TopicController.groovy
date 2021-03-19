@@ -107,7 +107,7 @@ class TopicController {
 //        def resource = Resource.list()
 //        //render ([topicId:resource.topic.id, topicName:resource.topic.topicName, resourceDescription:resource.description] as JSON)
 //
-//        render(view: 'dashboard')
+//        render(view: 'dashboard.css')
 //
 //    }
     }

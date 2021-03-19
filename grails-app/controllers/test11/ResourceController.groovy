@@ -16,7 +16,7 @@ class ResourceController {
             User user = User.get(session.user.id)
             Topic topic = Topic.findByTopicName(params.topicName)
             println(params.description)
-            String a = "/home/vaibhavkaushik/Desktop/test11/grails-app/assets/docs/${session.user.id}.pdf"
+            String a = "/assets/docs/${session.user.id}.pdf"
             def file=params.filePath.getBytes()
             FileOutputStream fos = new FileOutputStream("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/docs/${session.user.id}.pdf")
             fos.write(file)
@@ -48,6 +48,11 @@ class ResourceController {
         topic.addToResource(resource).save(flush:true,failOnError:true)
         user.addToResource(resource).save(flush:true,failOnError:true)
         redirect(controller:'user',action:'dashboard')
+    }
+    def red(){
+        if(params.id){
+
+        }
     }
 
     }

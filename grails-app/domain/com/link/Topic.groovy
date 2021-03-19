@@ -26,7 +26,7 @@ class Topic {
 
     static hasMany=[resource:Resource, sub:Subs]
     static constraints ={
-        topicName nullable : true
+        topicName nullable : true,unique: true
         //visibility nullable: true
 
     }

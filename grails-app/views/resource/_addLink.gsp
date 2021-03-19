@@ -14,7 +14,7 @@
                     <label style="float: left;margin-top: 5px">Description :</label><g:textArea style="margin-top: 5px" name="description" placeholder="enter..."/>
                     <br>
                     <br>
-                    <label style="float: left">Topic :</label><g:select name="topicName" from="${com.link.Topic.list().topicName}" class="dropdown-toggle btn btn-default col-sm-8" value="${addedResource?.topicName}"></g:select>
+                    <label style="float: left">Topic :</label><g:select name="topicName" from="${com.link.Subs.findAllByUser(session.user).topic.topicName}" class="dropdown-toggle btn btn-default col-sm-8" value="${addedResource?.topicName}"></g:select>
                     <div>
                         <g:actionSubmit value="share" class="btn" style="float: left;" name="saveLink" controller="resource" action="saveLink"/>
                         <g:actionSubmit value="cancel" class="btn  close" data-dismiss="modal" />

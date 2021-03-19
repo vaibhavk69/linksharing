@@ -14,7 +14,8 @@ import java.awt.image.BufferedImage
 
 class UserController {
     UserService userService
-
+    def groovyPageRenderer
+    def mailService
     def index() {
         def user = User.list()
         println("rendering.....")
@@ -23,126 +24,30 @@ class UserController {
     }
 
     def register() {
-        //println(params)//register
-        def u = new User(firstName:params.firstName,lastName: params.lastName,email: params.email,password: params.password,userName: params.userName).save(flush:true,failOnError:true
-        )
-        u.save(flush:true,failOnError:true)
-        println("before photo")
-        userService.savePhoto(u.id,params)
-        ////////////////////////////////////////////NOT WORKING BEYOND THIS//////////////////////////////////////////
-//        String fname="/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg";
-//        ByteArrayInputStream bis = new ByteArrayInputStream(params.photo.getBytes());
-//        BufferedImage bImage2 = ImageIO.read(bis);
-//        ImageIO.write(bImage2, "jpeg", new File("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg"));
-//
-//        u.photo = "/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg";
-//        def newFile = new File(fname)
-//        (params.photo).transferTo(newFile)
-
-        if (u.validate()) {
-            println("save success")
-        } else {
-            println("not saved")
-        }
-        //userService.saveInfo(params)
+        def ans = userService.registration(params)
         redirect(action: "login")
 
     }
 
     def update() {
-//        params.getFile("img")
-        User user = User.findById(params.id)
-//        println(user.id)
+        userService.update(params,session.user)
 
-        if (user) {
-            println(user.firstName)
-            println(params.userName)
-             //def image= new Image(params)
-            user.userName = params.userName
-            println(user.userName)
-
-            String fname="/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg";
-            ByteArrayInputStream bis = new ByteArrayInputStream(params.photo.getBytes());
-            BufferedImage bImage2 = ImageIO.read(bis);
-            ImageIO.write(bImage2, "jpeg", new File("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg"));
-
-            user.photo ="/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg";
-            session.user.photo ="profilePic/${params.userName}.jpeg";
-            if (session.user.photo) {
-                ///////////
-
-
-
-                ////////////////
-                flash.message = "success"
-//                ByteArrayInputStream bis = new ByteArrayInputStream(user.photo);
-//                BufferedImage bImage2 = ImageIO.read(bis);
-//                ImageIO.write(bImage2, "jpeg", new File("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/file1.jpeg") );
-                render(view: 'Dashboard')
-
-            } else {
-                flash.message = "failed"
-                render(view: 'Dashboard')
-            }
-            //userService.photos(params.photo,session.user.id)
-
-
-//            MultipartFile file=new File(params.photo)
-//            user.photo = file.getBytes()
-//            BufferedImage bImage = ImageIO.read(user.photo)
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream()
-//            ImageIO.write(bImage,"jpg", bos )
-//            byte [] newImage = bos.toByteArray()
-//            user.photo = newImage        //multipart file
-            user.save(flush: true, failOnError: true)
-
-
-        }
-        //   userService.update(params)
+        render(view: 'EditProfile')
     }
 
     def login() {
-        //print(params)
         User user = userService.login(params.email, params.password)
-        //print(user)
         session.user = user
         if (user) {
-
-//            ByteArrayInputStream bis = new ByteArrayInputStream(params.photo);
-//            BufferedImage bImage2 = ImageIO.read(bis);
-//            ImageIO.write(bImage2, "jpeg", new File("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/file1.jpeg") );
             println("inside if")
+            flash.messageUserLoggedIn = "user logged in as ${user.userName}"
             redirect(action: "dashboard")
-
+        }else{
+            flash.messageCredentialsError = ""
         }
         println("after if")
-        /////////////////TRENDING TOPIC///////////////////////////////////////////
-        def a = Resource.createCriteria().list {
-            createAlias('createdBy', 'u')
-            createAlias('topic', 't')
-            projections {
-                groupProperty('t.id')
-                count('t.id', 'Count')
-                property('t.topicName')
-                property('t.visibility')
-                property('u.userName')
-            }
-            order('Count', 'desc')
 
-        }
-        println("------------------------a below----------------------------------")
-        println(a)
-        def topic = []
-        a.each{
-            topic.add(
-                    'postCount': it[0],
-                    'topicName': it[1],
-                    'visibility': it[2],
-                    'createdBy': it[4]
-            )
-        }
-        println(topic)
-        //def topic= Topic.list(sort: 'dateCreated',order: 'desc',offset : 0 ,max: 5)
+        def topic= Topic.list(sort: 'dateCreated',order: 'desc',offset : 0 ,max: 5)
         ////////////////RECENT SHARES/////////////////////////////////////////////
         def resource = Resource.list(max: 5, sort: "dateCreated", order: "desc")
         render(view: 'forUser',model:[resource:resource,topic: topic]) //
@@ -157,7 +62,9 @@ class UserController {
 //        }
     }
     def admin(){
-        render(view: 'adminsPage')
+        def user = User.list()
+        println(user)
+        render(view: 'adminsPage', model: [user:user])
     }
     def recentShares(){
         def resource = Resource.list(max: 2, sort: "dateCreated", order: "desc")
@@ -169,25 +76,59 @@ class UserController {
     def dispOne(){
         render(view: 'changePass')
     }
-    def changePass(){
-        User user = User.findByEmail(params.email)
-        if(user){
-            if(user.password==params.password){
-                user.password = params.nPassword
-                user.save(flush:true,failOnError:true)
-                redirect(action: 'login')
-            }
-            else{
-                flash.message = "wrong password"
-                render(view: 'forUser')
-            }
-        }else{
-            flash.message = "no user found"
-            render(view: 'forUser')
+    def forgetPassword() {
+        User user = User.findByUserNameOrEmail(params.userName, params.email)
+        if (user) {
+            String uniqueToken = UUID.randomUUID()
+            user.verificationToken = uniqueToken
+            user.save(flush:true)
+            String url = "http://localhost:8091/login/validateLink?token=" +uniqueToken
+            Map mailMap = [:]
+            mailMap.userName = user.userName
+            mailMap.forgetPasswordUrl = url
+            mailService.sendMail
+                    {
+                        to params.email
+                        subject 'Update your password'
+//
+                        html groovyPageRenderer.render(template:"/template/forgotpassmail", model:mailMap)
+                    }
+        } else {
+            flash.notexist = "User does not exist"
         }
     }
+
+    def validateLink(String token) {
+        def user = User.findByVerificationToken(token)
+        if (user) {
+            user.verificationToken = null
+            render(view: '/template/_forgotpassupdate', model:[user: user])
+        } else {
+            Print("link expired")
+        }
+    }
+
+//    def changePass(){
+//        User user = User.findByEmail(params.email)
+//        if(user){
+//            if(user.password==params.password){
+//                user.password = params.nPassword
+//                user.save(flush:true,failOnError:true)
+//                redirect(action: 'login')
+//            }
+//            else{
+//                flash.message = "wrong password"
+//                render(view: 'forUser')
+//            }
+//        }else{
+//            flash.message = "no user found"
+//            render(view: 'forUser')
+//        }
+//    }
     def dashboard() {
         /////////////////////////////////SUBSCRIPTION////////////////////////////////
+
+      //  Subs sub=userService.deleteSub(session.user,params.subId)
         User user = User.findById(session.user.id)
 
 
@@ -205,42 +146,47 @@ class UserController {
                 println(subs.getClass())
                // render(view: '/user/Dashboard', model: [subs: subs])
             }
-//        }
-        ////////////////////////TRENDING TOPICS///////////////////////////
-        def a = Resource.createCriteria().list {
-            projections {
-                createAlias('createdBy', 'u')
-                createAlias('topic', 't')
-                count('t.id', 'Count')
-                groupProperty('t.id')
-                property('t.topicName')
-                property('t.visibility')
-                property('u.userName')
-                property('u.photo')
-            }
-            order('Count', 'desc')
 
-        }
-        println("------------------------a below----------------------------------")
-        println(a)
-        def topic = []
-        a.each{
-            topic.add(
-                    'postCount': it[0],
-                    'id':it[1],
-                    'topicName': it[2],
-                    'visibility': it[3],
-                    'createdBy': it[4],
-                    'photo':it[5]
-            )
-        }
-        println(topic)
-        // def topic= Topic.list(sort: 'dateCreated',order: 'desc',offset : 0 ,max: 5)
-        /////////////////////////////////////////////////////////////////////
-        render(view: 'Dashboard', model: [ subs : subs , topic : topic]) //
-//        else {
-//            render(view: 'Dashboard')
+        ////////////////////////TRENDING TOPICS///////////////////////////
+//        if(Resource.list()){                  ///////////database migration plugin
+//        def a = Resource.createCriteria().list {
+//            projections {
+//                createAlias('createdBy', 'u')
+//                createAlias('topic', 't')
+//                count('t.id', 'Count')
+//                groupProperty('t.id')
+//                property('t.topicName')
+//                property('t.visibility')
+//                property('u.userName')
+//                property('u.photo')
+//            }
+//            order('Count', 'desc')
+//
 //        }
+//        println("------------------------a below----------------------------------")
+//        println(a)
+//
+//        a.each{
+//            topic.add(
+//                    'postCount': it[0],
+//                    'id':it[1],
+//                    'topicName': it[2],
+//                    'visibility': it[3],
+//                    'createdBy': it[4],
+//                    'photo':it[5]
+//            )
+
+//        println(topic)
+    def subsInbox = Subs.findAllByUser(session.user).reverse()
+//    def topic = Topic.createCriteria().list{
+//        eq('visibility',Topic.Visibility.PUBLIC)
+//    }
+         def topics= Topic.list(sort: 'dateCreated',order: 'desc',offset : 0 ,max: 5)
+        /////////////////////////////////////////////////////////////////////
+//        render(view: 'Dashboard', model: [ subs : subs , topic : topic, subsInbox : subsInbox])
+         //
+        render(view: 'Dashboard', model: [ subs : subs , topic : topics, subsInbox : subsInbox ])  ///////////
+
     }
 
     def logout() {
@@ -303,19 +249,76 @@ class UserController {
 //        def resource = Resource.list()
 //        //render ([topicId:resource.topic.id, topicName:resource.topic.topicName, resourceDescription:resource.description] as JSON)
 //
-//        render(view: 'dashboard')
+//        render(view: 'dashboard.css')
 //
 //    }
     }
-    def send() {
+//    def send() {
+//        sendMail {
+//            to "vaibhavk0069@gmail.com"
+//            subject "sunny"
+//            text "sunny"
+//        }
+//
+//        flash.message = "Message sent at "+new Date()
+//        redirect action:"index"
+//    }
+//    def changePass()
+//    {
+//        userService.updatepass(params)
+//        println("\n\nvalues updated\n\n")
+//        flash.messagepassupdated = "Updated successfully. Please Login again."
+//        redirect(controller: 'user' , action:'index')
+//    }
+    def send(num, email) {
         sendMail {
-            to "vaibhavk0069@gmail.com"
-            subject "sunny"
-            text "sunny"
+            to "${email}"
+            subject "hello"
+            text "${num}"
         }
-
         flash.message = "Message sent at "+new Date()
-        redirect action:"index"
+        //redirect action:"index"
+        return num
     }
+
+    def forgotPassword(){
+        println(params.email)
+        def user = User.findByEmail(params.email)
+        println user
+        if(user){
+            def num = Math.abs( new Random().nextInt() % (9999 - 1000) ) + 1000
+            def a = send(num, params.email)
+            println num
+            user.otp = num
+            println("saving user otp:"+user.otp)
+            user.save(flush:true)
+            render(view: 'forgotPassword', model: [user:user])
+        }
+        else{
+            flash.messageUserNotFound = "${params.email} not found"
+        }
+    }
+    def otpVerify(){
+        println(params.email)
+        def user = User.findByEmail(params.email)
+        println ("otp " + params.otp)
+        println("num " + user.otp)
+        if(user.otp == params.otp){
+            println("otp verified")
+            if (params.password == params.confirmPassword){
+                user.password = params.password
+                user.save(flush:true)
+                flash.messagePasswordChanged = "Password Change Successful"
+            }else{
+                flash.messagePasswordNotChanged = "Password not Changed"
+                redirect(action: 'signup')
+            }
+            redirect(action: 'signup')
+        }else{
+            redirect(action: 'signup')
+        }
+        //render ("ok")
+    }
+    def updatePasswords
 }
 

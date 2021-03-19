@@ -105,7 +105,7 @@
                 <div class="postContent">
                     <p>
                         <a href="#" > NAME </a><br>
-                        <span style="color: gray;">@Username</span>
+                        <span style="color: gray;">${topic.sub.user.userName}</span>
                         <br>
                         <span style="float: left; margin-right: 50px;">
                             Subscriptions <br> 500

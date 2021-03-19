@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" >
     <div class="card-header">Subscription
         <span style="float: right;"><a href="1.html">view all</a></span>
     </div>
@@ -8,7 +8,10 @@
 
     <div class="card-body card${sub.id}" >
         <div style="float: left">
-            <g:img class="card-img-left" dir="images" file="not found"  alt="Card image"/>
+%{--            <g:img class="card-img-left" dir="images" file="not found"  alt="Card image"/>--}%
+            <div class="postImage" style="width: 100px; height: 100px; margin-right: 10px; margin-top: 10px;">
+                <g:img class="pImage" dir="/images/profilePic" file="${sub.user.photo}"  alt="Card image"/>
+            </div>
         </div>
         <label>${sub.topic.topicName}</label>
         <br>

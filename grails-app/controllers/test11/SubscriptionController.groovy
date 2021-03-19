@@ -17,4 +17,20 @@ class SubscriptionController {
 
         render(model: [subs:subs] as JSON)
     }
+    def subscribeTheTopics(Topic topic) {
+        if (topic){
+            println("----------------------------")
+            println("in subscription")
+            println(params)
+            println("params topic id "+params.topicId)
+            println("----------------------------")
+            Topic tp = Topic.get(params.topicId)
+            User user = User.get(session.user.id)
+            Subs subs = new Subs(user: user, topic: tp, seriousness: Subs.Seriousness.SERIOUS).save(flush: true, failOnError: true)
+            user.addToSubs(subs).save(flush: true, failOnError: true)
+            tp.addToSub(subs).save(flush: true, failOnError: true)
+        }
+        def all_topics = Topic.list()
+        render (model:[topicName:all_topics.topicName, topicId:all_topics.id] as JSON)
+    }
 }

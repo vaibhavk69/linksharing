@@ -61,36 +61,40 @@
     </div>
 
 </nav>
-<table class="table table-bordered" style="margin: 10px 10px 10px;float: left">
-    <thead>
-    <tr>
-        <g:sortableColumn property="id" title="Id"/>
-        <g:sortableColumn property="userName" title="Username"/>
-        <g:sortableColumn property="email" title="Email"/>
-        <g:sortableColumn property="firstName" title="Firstname"/>
-        <g:sortableColumn property="lastName" title="Lastname"/>
-        <g:sortableColumn property="active" title="Active"/>
-        <th>Manage</th>
-    </tr>
-    </thead>
-    <tbody>
-
-    <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-    </tr>
-    <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-    </tr>
-    <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-    </tr>
-    </tbody>
-</table>
+<div class="container" style="margin-top: 50px;">
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Date Created</th>
+            <th>Last Updated</th>
+            <th>Status</th>
+            <th>Manage</th>
+        </tr>
+        </thead>
+        <tbody>
+        <g:each in="${user}" var="num">
+            <tr>
+                <td>${num.firstName}</td>
+                <td>${num.lastName}</td>
+                <td>${num.email}</td>
+                <td>${num.userName}</td>
+                <td>${num.dateCreated}</td>
+                <td>${num.lastUpdated}</td>
+%{--                <td>${num.active}</td>--}%
+%{--                <g:if test="${num.active==true}">--}%
+%{--                    <td><g:link controller="user" action="activate" id="${num.id}">Deactivate</g:link></td>--}%
+%{--                </g:if>--}%
+%{--                <g:else>--}%
+%{--                    <td><g:link controller="user" action="deactivate" id="${num.id}">Activate</g:link> </td>--}%
+%{--                </g:else>--}%
+            </tr>
+        </g:each>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

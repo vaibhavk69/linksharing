@@ -18,10 +18,12 @@ class User {
     String password
     String userName
     String photo
-    //Boolean admin
-    //Boolean active
+
+//    Boolean admin
+//    Boolean active
     Date dateCreated
     Date lastUpdated
+    String otp
     static hasMany =[subs:Subs,topics :Topic,resource:Resource,readitem :ReadingItem,rating:Rating]
     static constraints = {
         firstName nullable: false, maxSize: 255
@@ -29,7 +31,9 @@ class User {
         email email: true, blank: false
         password size: 8..16, blank: false, nullable:false
         userName nullable:false
-        photo nullable: true
+        photo nullable: true, blank : true
+
+        otp nullable: true, blank: true
     }
     def getSubbedTopic(){
         List list= Subs.createCriteria().list{

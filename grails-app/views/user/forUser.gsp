@@ -82,13 +82,33 @@
                         </div>
                         <div class="card-body">
                             <g:form  action="login">
-                                <g:textField type="email" name="email" placeholder="Email address" class="form-control mb-2"/>              ////////unique emails
+                                <input type="email" name="email" placeholder="Email address" class="form-control mb-2"/>
                                 <g:passwordField name="password" placeholder="Password" class="form-control mb-2"/>
                                 <br>
                                 <br>
-                                <g:link action="dispOne">reset password</g:link>
+%{--                                <g:form  controller="user" action="forgotPassword">--}%
+%{--                                    <div id="demo" class="collapse">--}%
+%{--                                        <div class="form-group mt-2">--}%
+%{--                                            <input type="email" name="email" class="form-style" placeholder="Your Email" id="email" autocomplete="off">--}%
+%{--                                            <i class="input-icon uil uil-at"></i>--}%
+%{--                                        </div>--}%
+%{--                                        <g:actionSubmit value="submit" action="forgotPassword" class="btn mt-4" style="background-color: white;"/>--}%
+%{--                                    --}%
+%{--                                    </div>--}%
+%{--                                </g:form>--}%
                                 <button class="btn btn-success btn-block mt-3" name="login" class="pt-3">LogIn</button>
 
+                            </g:form>
+                            <p class="mb-0 mt-4 text-center"><a href="#0" class="link" data-toggle="collapse" data-target="#demo">Forgot your password?</a></p>
+                            <br>
+                            <g:form  controller="user" action="forgotPassword">
+                                <div id="demo" class="collapse">
+                                    <div class="form-group mt-2">
+                                        <input type="email" name="email" class="form-style" placeholder="Your Email" id="email" autocomplete="off">
+                                        <i class="input-icon uil uil-at"></i>
+                                    </div>
+                                    <g:actionSubmit value="submit" action="forgotPassword" class="btn mt-4" style="background-color: white;"/>
+                                </div>
                             </g:form>
                         </div>
 
@@ -101,12 +121,12 @@
                             <g:form controller="User" action="register">
                                 <g:textField name="lastName" placeholder="Lastname" class="form-control mb-2"/>
                                 <g:textField name="firstName" placeholder="Firstname" class="form-control mb-2"/>
-                                <g:textField name="email" placeholder="Email address" class="form-control mb-2"/>
+                                <input type="email" name="email" placeholder="Email address" class="form-control mb-2"/>
                                 <g:textField name="userName" placeholder="User-Name" class="form-control mb-2"/>
                                 <g:passwordField name="password" placeholder="Password" class="form-control mb-2"/>
-                                <span>
-                                    <label for="photo">Select image:</label><input type="file" id="photo" name="photo" >
-                                </span>
+%{--                                <span>--}%
+%{--                                    <label for="photo">Select image:</label><input type="file" id="photo" name="photo" >--}%
+%{--                                </span>--}%
                                 <g:submitButton class="btn btn-success btn-block mt-3 pt-3" name="register" >Submit</g:submitButton>
                             </g:form>
                         </div>
@@ -117,6 +137,31 @@
     </div>
 
 </div>
-
+<div class="modal fade" id="forget_password_modal" role="dialog " aria-hidden="true">
+    <div class="modal-dialog">
+        <g:form   controller="user" action="forgetPassword" class="form-horizontal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Forget Password</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group form-group-sm">
+                        <div class="col-xs-5 ">
+                            <label class=" control-label" for="userName">Enter your Email</label>
+                        </div>
+                        <div class="col-xs-7 ">
+                            <input class="form-control" name="email" type="text" id="usName" >
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </g:form>
+    </div>
+</div>
 </body>
 </html>
