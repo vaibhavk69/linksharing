@@ -34,24 +34,40 @@ class TopicController {
 
         }
     }
-    def delete(Topic topic) {   ///////////////           search box
-        println("cant get in here")
+//    def delete(Topic topic) {   ///////////////           search box
+//        println("cant get in here")
+//        topicService.delete(topic)
+//        if (topic){
+//            List<Resource> rs = Resource.findAllByTopic(topic)
+//            rs.each{
+//                println(it)
+//                it.delete(flush:true)
+//            }
+//            topic.delete(flush: true)
+//        }
+//        List<Topic> all_topics = Topic.findAllByCreatedBy(session.user)
+//        render ([topicName:all_topics.topicName, topicId:all_topics.id] as JSON)
+//    }
+    def topicDelete(){ //////////////////// this deletes the topic from view topic page
+        println("inside action")
+        Topic topic=Topic.get(params.topicId)
+        println(topic)
         if (topic){
-            println("params topic id "+params.topicId)
-            def tp = Topic.get(params.topicId)
+            List<Resource> resource = Resource.findAllByTopic(topic)
+            resource.each{
+                it.delete(flush:true)
+            }
+            List<Subs> sub = Subs.findAllByTopic(topic)
+
+            println("inside conditions")
+            println("params topic id "+params.id)
+            def tp = topic
+            println("tp is delete")
             tp.delete(flush: true)
         }
-        def all_topics = Topic.list()
-        render (model:[topicName:all_topics.topicName, topicId:all_topics.id] as JSON)
+        List<Topic> all_topics = Topic.findAllByCreatedBy(session.user)
+        render ([topicName:all_topics.topicName, topicId:all_topics.id] as JSON)
     }
-//    def topicDelete(){ //////////////////// this deletes the topic from view topic page
-//        Topic topic=Topic.get(params.topicId)
-//        if (topic && session.user.id==topic.createdBy.id){
-//            println("params topic id "+params.topicId)
-//            def tp = topic
-//            tp.delete(flush: true)
-//        }
-//    }
     def topicShow(){
 
         Topic topic = Topic.get(params.topicId)
@@ -59,6 +75,9 @@ class TopicController {
         println("resources below-----------------------------------")
         println(resource.description)
         render(view: 'topicShow',model:[topic:topic,resource:resource])
+    }
+    def createdTopic(){
+        List<Topic> myTopics = topicService.myTopic(session.user)
     }
     def search() {
         ///////////////////////////EXPERIMENT/////////////////////////

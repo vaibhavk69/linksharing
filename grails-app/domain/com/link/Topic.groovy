@@ -1,10 +1,13 @@
 package com.link
 
+import com.sun.org.apache.xpath.internal.operations.Bool
+
 
 class Topic {
 //    Topic(def a){
 //        this.name=a.name
 //    }
+    //Boolean isDelete
     User createdBy
     String topicName
     Date dateCreated
@@ -30,5 +33,12 @@ class Topic {
         //visibility nullable: true
 
     }
+//    def deleteTopic(Topic topic){
+//        Resource res = Resource.findAllByTopic(topic)
+//        res.each{
+//            it.isDelete = true
+//        }
+//        topic.delete(flush:true)
+//    }
 
 }

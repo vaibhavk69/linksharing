@@ -1,6 +1,7 @@
 package com.link
 
 class Subs {
+ //   Boolean isDelete
     Date dateCreated
     User user
     Topic topic

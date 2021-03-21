@@ -1,10 +1,5 @@
 package com.link
 
-class LinkResource {
+class LinkResource extends Resource{
     String url
-    Resource resource
-    static belongsTo = [resource:Resource]
-    static constraints = {
-        url nullable: true
-    }
 }

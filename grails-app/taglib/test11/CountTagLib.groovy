@@ -1,11 +1,13 @@
 package test11
-
-import com.link.User
 import com.link.*
+
+
 class CountTagLib {
     static defaultEncodeAs = [taglib:'html']
     //static encodeAsForTags = [tagName: [taglib:'html'], otherTagName: [taglib:'none']]
     static namespace = "ct"
+
+
     def topicCount = { attrs, body ->
         Long userId = attrs.userId
         if (userId) {

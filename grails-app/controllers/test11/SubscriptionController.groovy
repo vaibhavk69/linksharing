@@ -1,11 +1,13 @@
 package test11
 
+import com.link.Resource
 import com.link.Subs
 import com.link.Topic
 import com.link.User
 import grails.converters.JSON
 
 class SubscriptionController {
+    ResourceService resourceService
 
     def index() {
         //render(view:)
@@ -18,6 +20,9 @@ class SubscriptionController {
         render(model: [subs:subs] as JSON)
     }
     def subscribeTheTopics(Topic topic) {
+        if(Topic.findById(params.id)){
+
+        }
         if (topic){
             println("----------------------------")
             println("in subscription")
@@ -32,5 +37,12 @@ class SubscriptionController {
         }
         def all_topics = Topic.list()
         render (model:[topicName:all_topics.topicName, topicId:all_topics.id] as JSON)
+    }
+    def unSub(){
+        Subs sub=Subs.findById(params.id)
+        if(sub){
+            sub.delete(flush:true)
+        }
+        redirect(controller : 'user',action: 'dashboard')
     }
 }

@@ -1,10 +1,5 @@
 package com.link
 
-class DocumentResource {
+class DocumentResource extends Resource{
     String filePath
-    Resource resource
-    static belongsTo = [resource:Resource]
-    static constraints = {
-        filePath nullable: true ,maxSize: 700
-    }
 }

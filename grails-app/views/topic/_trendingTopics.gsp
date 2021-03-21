@@ -18,7 +18,7 @@
                     <br>
                     <span style="color: gray;">@${num.createdBy.userName}</span>
                     <a style="float: inline-end;" class="subscribe${num.id}" onclick="subscribe(${num.id})">Subscribe</a>
-                    <a style="float: inline-end;" class="Unsubscribe${num.id}" onclick="unsubscribe(${num.id})"></a>
+
                     <br>
                     <span style="float: left; margin-right: 50px;">
                         Subscriptions

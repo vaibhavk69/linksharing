@@ -2,15 +2,12 @@ package test11
 
 import com.link.Subs
 
-//import com.link.Subs
 import com.link.User
 
 import javax.imageio.ImageIO
 import javax.xml.bind.ValidationException
 import java.awt.image.BufferedImage
 
-//import grails.gorm.transactions.Transactional
-//import grails.web.databinding.DataBinder
 
 
 class UserService  {
@@ -34,17 +31,18 @@ class UserService  {
             usr.save(flush: true, failOnError: true)
         }
         catch (ValidationException e){
-//            String a="error: "
-//            usr.errors.allErrors.each{
-//                a= a+ it
-            flash.messageWrongEntry = "invalid credentials"
-
-            //return a
+////            String a="error: "
+////            usr.errors.allErrors.each{
+////                a= a+ it
+//            flash.messageWrongEntry = "invalid credentials"
+//
+//            //return a
+            return null
         }
         if (usr.validate()) {
-            println("save success")
+            return usr
         } else {
-            println("not saved")
+            return null
         }
     }
     def update(def params,def sessionUser){
@@ -55,39 +53,27 @@ class UserService  {
             println(user.firstName)
             println(params.userName)
             //def image= new Image(params)
-            user.userName = params.userName
-            println(user.userName)
-            String fname="/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg";
-            ByteArrayInputStream bis = new ByteArrayInputStream(params.photo.getBytes());
-            BufferedImage bImage2 = ImageIO.read(bis);
-            ImageIO.write(bImage2, "jpeg", new File("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg"));
+            try{
+                user.userName = params.userName
+                if(params.photo){
+                    println(user.userName)
+                    String fname="/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg";
+                    ByteArrayInputStream bis = new ByteArrayInputStream(params.photo.getBytes());
+                    BufferedImage bImage2 = ImageIO.read(bis);
+                    ImageIO.write(bImage2, "jpeg", new File("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${params.userName}.jpeg"));
 
-            user.photo ="/assets/images/profilePic/${params.userName}.jpeg";
-            sessionUser.photo ="/profilePic/${params.userName}.jpeg";
+                    user.photo ="/assets/images/profilePic/${params.userName}.jpeg";
+                    sessionUser.photo ="/profilePic/${params.userName}.jpeg";
+                }
 
-                ///////////
-
-
-
-                ////////////////
-//                flash.message = "success"
-//                ByteArrayInputStream bis = new ByteArrayInputStream(user.photo);
-//                BufferedImage bImage2 = ImageIO.read(bis);
-//                ImageIO.write(bImage2, "jpeg", new File("/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/file1.jpeg") );
-
-            //userService.photos(params.photo,session.user.id)
-
-
-//            MultipartFile file=new File(params.photo)
-//            user.photo = file.getBytes()
-//            BufferedImage bImage = ImageIO.read(user.photo)
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream()
-//            ImageIO.write(bImage,"jpg", bos )
-//            byte [] newImage = bos.toByteArray()
-//            user.photo = newImage        //multipart file
-            user.save(flush: true, failOnError: true)
-
-
+                user.save(flush: true, failOnError: true)
+                return "success"
+            }
+            catch(Exception e){
+                return null
+            }
+        } else {
+            return null
         }
         //   userService.update(params)
     }
@@ -101,6 +87,7 @@ class UserService  {
 //        User user =User.findByEmail(params.email)
 //    }
     def login(String email,String password) {
+
         User user = User.findByEmailAndPassword(email, password)
         if (user) {
             user.photo ="/home/vaibhavkaushik/Desktop/test11/grails-app/assets/images/profilePic/${user.userName}.jpeg";
@@ -108,6 +95,8 @@ class UserService  {
         } else {
             return null
         }
+
+
     }
     def deleteSub(User sessionUser, long subId){
         User user = User.findById(sessionUser.id)
@@ -129,15 +118,15 @@ class UserService  {
         }
         return subs
     }
-    def updatepass(def params) {
-        def user = User.findById(params.user)
-        println(params.password)
-        println(params.confirmPassword)
-        if (params.password == params.confirmPassword) {
-            user.password =params.password
+    def updatepass(String password,String confirmPassword,User user) {
+        if (password == confirmPassword) {
+            user.password =password
             user.save(flush:true)
 
+        } else {
+            return null
         }
+
     }
 }
 

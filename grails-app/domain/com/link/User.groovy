@@ -20,7 +20,7 @@ class User {
     String photo
 
 //    Boolean admin
-//    Boolean active
+ //   Boolean active
     Date dateCreated
     Date lastUpdated
     String otp
@@ -30,7 +30,7 @@ class User {
         lastName nullable: false, maxSize: 255
         email email: true, blank: false
         password size: 8..16, blank: false, nullable:false
-        userName nullable:false
+        userName nullable:false , unique: true
         photo nullable: true, blank : true
 
         otp nullable: true, blank: true

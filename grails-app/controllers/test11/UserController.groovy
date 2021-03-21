@@ -1,5 +1,6 @@
 package test11
 
+import com.link.ReadingItem
 import com.link.Subs
 import com.link.Topic
 import com.link.Resource
@@ -14,43 +15,60 @@ import java.awt.image.BufferedImage
 
 class UserController {
     UserService userService
+    TopicService topicService
     def groovyPageRenderer
     def mailService
-    def index() {
-        def user = User.list()
-        println("rendering.....")
-        render(view: "forUser", model: [user: user])
 
+    def index(){
+        redirect(controller: 'login', action: 'auth')
     }
-
     def register() {
         def ans = userService.registration(params)
-        redirect(action: "login")
+        if (ans) {
+            flash.success = "registration successful"
+            redirect(controller: "login")
+        } else {
+            flash.error = "registration failed"
+            redirect(controller: "login")
+        }
+
 
     }
 
     def update() {
-        userService.update(params,session.user)
-
+        if(userService.update(params, session.user)){
+            flash.message = "update success"
+        } else {
+            flash.error = "update failed"
+        }
         render(view: 'EditProfile')
     }
-
+    def updatePass(){
+        if(userService.updatepass(params.password,params.confPass,session.user))
+        {
+            flash.success = "Update success"
+        } else {
+            flash.error = "Update failed"
+        }
+    }
     def login() {
+        render(view: 'forUser')
+//        List<Resource> resource = Resource.list(max: 5, sort: "dateCreated", order: "desc")
         User user = userService.login(params.email, params.password)
         session.user = user
         if (user) {
             println("inside if")
             flash.messageUserLoggedIn = "user logged in as ${user.userName}"
             redirect(action: "dashboard")
-        }else{
-            flash.messageCredentialsError = ""
+        } else {
+            flash.messageCredentialsError = "invalid credentials"
         }
         println("after if")
 
-        def topic= Topic.list(sort: 'dateCreated',order: 'desc',offset : 0 ,max: 5)
+        def topic = Topic.list(sort: 'dateCreated', order: 'desc', offset: 0, max: 5)
         ////////////////RECENT SHARES/////////////////////////////////////////////
-        def resource = Resource.list(max: 5, sort: "dateCreated", order: "desc")
-        render(view: 'forUser',model:[resource:resource,topic: topic]) //
+
+        render(view: 'forUser', model: [resource: resource, topic: topic]) //
 
 
         //        if( userService.login(params.email,params.password)){
@@ -61,28 +79,32 @@ class UserController {
 //            render "logged out"
 //        }
     }
-    def admin(){
-        def user = User.list()
+
+    def admin() {
+        List<User> user = User.list()
         println(user)
-        render(view: 'adminsPage', model: [user:user])
+        render(view: 'adminsPage', model: [user: user])
     }
-    def recentShares(){
-        def resource = Resource.list(max: 2, sort: "dateCreated", order: "desc")
+
+    def recentShares() {
+        List<Resource> resource = Resource.list(max: 2, sort: "dateCreated", order: "desc")
 //        return resource
 //        println("below are resources-----------------------")
 //        println(resource)
 //        render(view: '_recentShares',model: [resource:resource])
     }
-    def dispOne(){
+
+    def dispOne() {
         render(view: 'changePass')
     }
+
     def forgetPassword() {
         User user = User.findByUserNameOrEmail(params.userName, params.email)
         if (user) {
             String uniqueToken = UUID.randomUUID()
             user.verificationToken = uniqueToken
-            user.save(flush:true)
-            String url = "http://localhost:8091/login/validateLink?token=" +uniqueToken
+            user.save(flush: true)
+            String url = "http://localhost:8091/login/validateLink?token=" + uniqueToken
             Map mailMap = [:]
             mailMap.userName = user.userName
             mailMap.forgetPasswordUrl = url
@@ -91,22 +113,22 @@ class UserController {
                         to params.email
                         subject 'Update your password'
 //
-                        html groovyPageRenderer.render(template:"/template/forgotpassmail", model:mailMap)
+                        html groovyPageRenderer.render(template: "/template/forgotpassmail", model: mailMap)
                     }
         } else {
             flash.notexist = "User does not exist"
         }
     }
 
-    def validateLink(String token) {
-        def user = User.findByVerificationToken(token)
-        if (user) {
-            user.verificationToken = null
-            render(view: '/template/_forgotpassupdate', model:[user: user])
-        } else {
-            Print("link expired")
-        }
-    }
+//    def validateLink(String token) {
+//        def user = User.findByVerificationToken(token)
+//        if (user) {
+//            user.verificationToken = null
+//            render(view: '/template/_forgotpassupdate', model:[user: user])
+//        } else {
+//            Print("link expired")
+//        }
+//    }
 
 //    def changePass(){
 //        User user = User.findByEmail(params.email)
@@ -126,93 +148,41 @@ class UserController {
 //        }
 //    }
     def dashboard() {
-        /////////////////////////////////SUBSCRIPTION////////////////////////////////
-
-      //  Subs sub=userService.deleteSub(session.user,params.subId)
-        User user = User.findById(session.user.id)
-
-
-//        if (user) {
-            if(params.subId){
-                def sb = Subs.get(params.subId)
-                sb.delete(flush:true)
-            }
-            println("hereeeeeeeeeeeeeeeeeeeeeeeeeeee")
-            def subs = Subs.findAllByUser(user)
-            println(Subs.findAllByUser(user))
-            println("hereeeeeeeeeeeeeeeeeeeeeeeeeeee")
-            if (subs) {
-                println(subs.topic.topicName)
-                println(subs.getClass())
-               // render(view: '/user/Dashboard', model: [subs: subs])
-            }
-
-        ////////////////////////TRENDING TOPICS///////////////////////////
-//        if(Resource.list()){                  ///////////database migration plugin
-//        def a = Resource.createCriteria().list {
-//            projections {
-//                createAlias('createdBy', 'u')
-//                createAlias('topic', 't')
-//                count('t.id', 'Count')
-//                groupProperty('t.id')
-//                property('t.topicName')
-//                property('t.visibility')
-//                property('u.userName')
-//                property('u.photo')
-//            }
-//            order('Count', 'desc')
-//
-//        }
-//        println("------------------------a below----------------------------------")
+        List<Subs> sub = Subs.findAllByUser(session.user)
+        print(sub)
+//        List a=sub.list(sort: 'dateCreated',order: 'desc',offset : 0 ,max: 5)
 //        println(a)
-//
-//        a.each{
-//            topic.add(
-//                    'postCount': it[0],
-//                    'id':it[1],
-//                    'topicName': it[2],
-//                    'visibility': it[3],
-//                    'createdBy': it[4],
-//                    'photo':it[5]
-//            )
-
-//        println(topic)
-    def subsInbox = Subs.findAllByUser(session.user).reverse()
-//    def topic = Topic.createCriteria().list{
-//        eq('visibility',Topic.Visibility.PUBLIC)
-//    }
-         def topics= Topic.list(sort: 'dateCreated',order: 'desc',offset : 0 ,max: 5)
-        /////////////////////////////////////////////////////////////////////
-//        render(view: 'Dashboard', model: [ subs : subs , topic : topic, subsInbox : subsInbox])
-         //
-        render(view: 'Dashboard', model: [ subs : subs , topic : topics, subsInbox : subsInbox ])  ///////////
-
+        List<Topic> topic=topicService.trendingTopic()
+        List<ReadingItem> subTopic = topicService.subbedTopics(session.user)
+        render(view: 'dashboard',model: [subs:sub,topic: topic,subTopic:subTopic])
     }
+
 
     def logout() {
 
         session.invalidate()
         //userService.logout()
-        redirect(view: 'forUser')
+        redirect(controller: 'login')
     }
 
 
     def profile() {
         def myTopics = Topic.findAllByCreatedBy(session.user)
         if (session.user) {
-            render(view: 'EditProfile',model: [myTopics:myTopics])
+            render(view: 'EditProfile', model: [myTopics: myTopics])
         } else
             render "Not found"
     }
+
     def search() {
         ///////////////////////////EXPERIMENT/////////////////////////
         if (params) {
-            def t = Topic.createCriteria().list{
-                ilike('topicName',"%${params.search}%")
+            def t = Topic.createCriteria().list {
+                ilike('topicName', "%${params.search}%")
             }
-            def a= t.id.asList()
+            def a = t.id.asList()
 
-        render([topicName:t.topicName,topicId:a] as JSON)
+            render([topicName: t.topicName, topicId: a] as JSON)
 //
 //            'ex' {
 //                eq ('', '')
@@ -276,49 +246,109 @@ class UserController {
             subject "hello"
             text "${num}"
         }
-        flash.message = "Message sent at "+new Date()
+        flash.message = "Message sent at " + new Date()
         //redirect action:"index"
         return num
     }
 
-    def forgotPassword(){
+    def forgotPassword() {
         println(params.email)
         def user = User.findByEmail(params.email)
         println user
-        if(user){
-            def num = Math.abs( new Random().nextInt() % (9999 - 1000) ) + 1000
+        if (user) {
+            def num = Math.abs(new Random().nextInt() % (9999 - 1000)) + 1000
             def a = send(num, params.email)
             println num
             user.otp = num
-            println("saving user otp:"+user.otp)
-            user.save(flush:true)
-            render(view: 'forgotPassword', model: [user:user])
-        }
-        else{
+            println("saving user otp:" + user.otp)
+            user.save(flush: true)
+            render(view: 'forgotPassword', model: [user: user])
+        } else {
             flash.messageUserNotFound = "${params.email} not found"
         }
     }
-    def otpVerify(){
+
+    def otpVerify() {
         println(params.email)
         def user = User.findByEmail(params.email)
-        println ("otp " + params.otp)
+        println("otp " + params.otp)
         println("num " + user.otp)
-        if(user.otp == params.otp){
+        if (user.otp == params.otp) {
             println("otp verified")
-            if (params.password == params.confirmPassword){
+            if (params.password == params.confirmPassword) {
                 user.password = params.password
-                user.save(flush:true)
+                user.save(flush: true)
                 flash.messagePasswordChanged = "Password Change Successful"
-            }else{
+            } else {
                 flash.messagePasswordNotChanged = "Password not Changed"
                 redirect(action: 'signup')
             }
             redirect(action: 'signup')
-        }else{
+        } else {
             redirect(action: 'signup')
         }
         //render ("ok")
     }
-    def updatePasswords
-}
 
+
+/////////////////////////////////SUBSCRIPTION////////////////////////////////
+
+//      //  Subs sub=userService.deleteSub(session.user,params.subId)
+//        User user = User.findById(session.user.id)
+//
+//
+////        if (user) {
+//            if(params.subId){
+//                def sb = Subs.get(params.subId)
+//                sb.delete(flush:true)
+//            }
+//            println("hereeeeeeeeeeeeeeeeeeeeeeeeeeee")
+//            List<Subs> subs = Subs.findAllByUser(user)
+//            println(Subs.findAllByUser(user))
+//            println("hereeeeeeeeeeeeeeeeeeeeeeeeeeee")
+//            if (subs) {
+//                println(subs.topic.topicName)
+//                println(subs.getClass())
+//               // render(view: '/user/Dashboard', model: [subs: subs])
+//            }
+//
+//        ////////////////////////TRENDING TOPICS///////////////////////////
+////        if(Resource.list()){                  ///////////database migration plugin
+////        def a = Resource.createCriteria().list {
+////            projections {
+////                createAlias('createdBy', 'u')
+////                createAlias('topic', 't')
+////                count('t.id', 'Count')
+////                groupProperty('t.id')
+////                property('t.topicName')
+////                property('t.visibility')
+////                property('u.userName')
+////                property('u.photo')
+////            }
+////            order('Count', 'desc')
+////
+////        }
+////        println("------------------------a below----------------------------------")
+////        println(a)
+////
+////        a.each{
+////            topic.add(
+////                    'postCount': it[0],
+////                    'id':it[1],
+////                    'topicName': it[2],
+////                    'visibility': it[3],
+////                    'createdBy': it[4],
+////                    'photo':it[5]
+////            )
+//
+////        println(topic)
+//    List<Subs> subsInbox = Subs.findAllByUser(session.user).reverse()
+////    def topic = Topic.createCriteria().list{
+////        eq('visibility',Topic.Visibility.PUBLIC)
+////    }
+//         def topics= Topic.list(sort: 'dateCreated',order: 'desc',offset : 0 ,max: 5)
+//        /////////////////////////////////////////////////////////////////////
+////        render(view: 'Dashboard', model: [ subs : subs , topic : topic, subsInbox : subsInbox])
+//         //
+//        render(view: 'Dashboard', model: [ subs : subs , topic : topics, subsInbox : subsInbox ])  ///////////
+}

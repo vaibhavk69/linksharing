@@ -1,6 +1,7 @@
 package com.link
 
 class Resource {
+   // Boolean isDelete
     String description
     Date dateCreated
     Date lastUpdated
@@ -9,10 +10,10 @@ class Resource {
     static mapping = {
         table 'ResourceInfo'
     }
-    static hasMany = [linkResource:LinkResource,documentResource:DocumentResource]
-    static belongsTo =[createdBy:User, topic :Topic]
-    static constraints ={
-        description nullable : true
+    static hasMany = [readingItem:ReadingItem,createdBy: User]
+    static belongsTo = [topic: Topic]
+    static constraints = {
+        description nullable: true
 
     }
 

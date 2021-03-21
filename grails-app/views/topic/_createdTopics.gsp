@@ -19,19 +19,7 @@
                 </p>
             </div>
             <p style="float: inline-end; margin-bottom: 0%;">
-                <span style="display:flex; justify-content: space-between">
-                    <select style="margin-left: 20px">
-                        <option value = "serious" selected> serious</option>
-                        <option value = "casual"> casual</option>
-                        <option value = "veryserious"> Very serious</option>
-                    </select>
-                    <select style="margin-left: 20px">
-                        <option value = "serious" selected> Public</option>
-                        <option value = "casual"> Private</option>
-                    </select>
-                    &nbsp;&nbsp;
-                    <i class="far fa-plus-square fa-2x" style="margin-left: 20px"></i>&nbsp;&nbsp;
-                    <i class="far fa-envelope fa-2x" style="margin-left: 20px"></i>&nbsp;&nbsp;
+
                     <i id="deleteTopic" class="far fa-trash-alt fa-2x" style="margin-left: 20px" onclick="myfunction1(${num.id})"></i>
 %{--                                        <g:link controller="topic" action="delete" params="num.id"><i class="far fa-trash-alt fa-2x" style="margin-left: 20px"></i></g:link>--}%
                 </span>
